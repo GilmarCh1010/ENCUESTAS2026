@@ -4,7 +4,13 @@ export const FLOW: Step[] = [
     // --- BIENVENIDA ---
     { 
         type: 'bot', 
-        message: '¡Bienvenida/o a UNEFCO! 🇧🇴\n\nAyúdenos a diseñar la *Propuesta Formativa 2026*. Su opinión es clave.', 
+        message: '👋🏛️, Sean bienvenidas a esta consulta organizada por UNEFCO 📊. ¡Su participación es clave para mejorar el rendimiento y la calidad educativa! 🌟📚 Su aporte será fundamental para orientar la gestión 2026 📅✨', 
+        delay: 1000 
+    },
+
+    { 
+        type: 'bot', 
+        message: 'Nuestro Objetivo general 🎯: Desarrollar la formación continua de maestras y maestros del Sistema Educativo Plurinacional para mejorar la calidad educativa 📈🏛️. Funciona como un brazo operativo del Ministerio de Educación, diseñando y ejecutando programas de actualización docente en diversas modalidades como conferencias 🗣️, talleres 🛠️ y ciclos formativos 🔄, con el fin de fortalecer sus capacidades 💪 y mejorar los procesos de enseñanza 📚', 
         delay: 1000 
     },
 
