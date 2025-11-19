@@ -68,9 +68,9 @@ export const FLOW: Step[] = [
         message: '¿A qué *subsistema* pertenece?', 
         delay: 1000, 
         options: [
-            { value: 'Educación regular', label: 'Regular', icon: '📚' }, 
-            { value: 'Educación alternativa', label: 'Alt./Esp.', icon: '♿' }, 
-            { value: 'Educación superior', label: 'Superior', icon: '🎓' }
+            { value: 'Educación regular', label: 'Educación Regular', icon: '📚' }, 
+            { value: 'Educación alternativa', label: 'Educación alternativa', icon: '♿' }, 
+            { value: 'Educación superior', label: 'Educación superior', icon: '🎓' }
         ], 
         input: 'subsistema', 
         questionLabel: 'Subsistema' 
@@ -94,7 +94,7 @@ export const FLOW: Step[] = [
     // --- EVALUACIÓN 2025 ---
     { 
         type: 'bot', 
-        message: '¿Conoció la oferta formativa UNEFCO 2025?', 
+        message: '¿Conoce la oferta formativa UNEFCO 2025?', 
         delay: 1000, 
         options: [
             { value: 'si', label: 'Sí', icon: '✅' }, 
