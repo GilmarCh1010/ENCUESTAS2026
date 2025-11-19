@@ -198,7 +198,7 @@ export const FLOW: Step[] = [
     },
     { 
         type: 'bot', 
-        message: '¿Qué aspectos deberían mejorar en general?', 
+        message: '¿Qué aspectos deberían mejorar en la calidad de los cursos?', 
         delay: 1000, 
         input: 'aspectos_mejora', 
         validation: 'optional', 
