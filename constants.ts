@@ -1,4 +1,4 @@
-import { Step } from './types';
+\nimport { Step } from './types';
 
 export const FLOW: Step[] = [
     // --- BIENVENIDA ---
@@ -10,7 +10,7 @@ export const FLOW: Step[] = [
 
     { 
         type: 'bot', 
-        message: '*Nuestro Objetivo general* 🎯: \nDesarrollar la formación continua de maestras y maestros del Sistema Educativo Plurinacional para mejorar la calidad educativa 📈🏛️. \nFunciona como un brazo operativo del Ministerio de Educación, diseñando y ejecutando programas de actualización docente en diversas modalidades como conferencias 🗣️, talleres 🛠️ y ciclos formativos 🔄, con el fin de fortalecer sus capacidades 💪 y mejorar los procesos de enseñanza 📚', 
+        message: '*Nuestro Objetivo general* 🎯: \nDesarrollar la formación continua de maestras y maestros del Sistema Educativo Plurinacional para mejorar la calidad educativa 📈🏛️. \n\nFunciona como un brazo operativo del Ministerio de Educación, diseñando y ejecutando programas de actualización docente en diversas modalidades como conferencias 🗣️, talleres 🛠️ y ciclos formativos 🔄, con el fin de fortalecer sus capacidades 💪 y mejorar los procesos de enseñanza 📚', 
         delay: 3000 
     },
 
