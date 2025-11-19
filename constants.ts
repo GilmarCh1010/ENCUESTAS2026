@@ -1,4 +1,4 @@
-\nimport { Step } from './types';
+import { Step } from './types';
 
 export const FLOW: Step[] = [
     // --- BIENVENIDA ---
