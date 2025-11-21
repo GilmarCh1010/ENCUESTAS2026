@@ -919,15 +919,27 @@ export const FLOW: Step[] = [
     },
 
     // --- SUB-RAMA: NO CONOCE (Conoce=No) ---
-    // PASO 1: Solo muestra el PDF
+    // Paso 1: Mostrar solo el PDF
     { 
         type: 'conditional', 
         condition: (data) => data.conoce_oferta === 'no', 
         ifTrue: { 
             type: 'bot', 
-            message: 'A continuación le presentamos la oferta formativa con la cual se trabajó este año. (Revise el enlace PDF 👇 si desea ver el detalle de ciclos disponibles).\n\n¿Qué factores influyeron para que no pueda ser partícipe de los cursos formativos de UNEFCO la gestión 2025?', 
+            message: 'A continuación le presentamos la oferta formativa con la cual se trabajó este año. Revise el enlace PDF 👇 si desea ver el detalle de ciclos disponibles.', 
             delay: 2000, 
-            externalLink: 'https://drive.google.com/file/d/1nu3t_VeXoT5HCUZ8YHGB34nBi1ewAuLT/view?usp=sharing',
+            externalLink: 'https://drive.google.com/file/d/1nu3t_VeXoT5HCUZ8YHGB34nBi1ewAuLT/view?usp=sharing'
+            // Sin opciones aquí, solo muestra el enlace
+        } 
+    },
+    
+    // Paso 2: Hacer la pregunta con opciones (separado)
+    { 
+        type: 'conditional', 
+        condition: (data) => data.conoce_oferta === 'no', 
+        ifTrue: { 
+            type: 'bot', 
+            message: '¿Qué factores influyeron para que no pueda ser partícipe de los cursos formativos de UNEFCO la gestión 2025?', 
+            delay: 3000, // Ajusta el delay para que aparezca después del PDF
             options: [
                 { value: 'falta_tiempo', label: 'Falta de tiempo', icon: '⏳' }, 
                 { value: 'no_interes', label: 'Los cursos/ciclos y/o talleres no son de mi interés', icon: '🤔' },
@@ -936,7 +948,7 @@ export const FLOW: Step[] = [
             input: 'factor_no_participacion', 
             questionLabel: 'Factor No Participación' 
         } 
-    }, 
+    },
 
     // --- SECCIÓN DE SUGERENCIAS (COMÚN PARA TODOS) ---
     {
