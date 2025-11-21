@@ -678,7 +678,7 @@ export const FLOW: Step[] = [
     },
     { 
         type: 'bot', 
-        message: '¿Distrito educativo? (Escriba el nombre)', 
+        message: '¿Distrito educativo?', 
         delay: 1000, 
         input: 'distrito', 
         validation: 'text', 
