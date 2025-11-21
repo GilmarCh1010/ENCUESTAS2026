@@ -4,55 +4,55 @@ import { Step, Option, UserData } from './types';
 const COMMON_CONFERENCES: Option[] = [
     { 
         value: 'conf_gestion_educativa_2025', 
-        label: 'Conferencia: Gestión Educativa 2025 en el SEP según lineamientos de la R.M. 0001/2025', 
+        label: 'Gestión Educativa 2025 en el SEP según lineamientos de la R.M. 0001/2025', 
         //description: 'Gestión Educativa 2025 en el SEP según lineamientos de la R.M. 0001/2025.', 
         icon: '📋' 
     },
     { 
         value: 'conf_lectura_comprensiva', 
-        label: 'Conferencia: Fortaleciendo la lectura comprensiva', 
+        label: 'Fortaleciendo la lectura comprensiva: Estrategias eficaces para desarrollar habilidades lectoras en todos los niveles educativos.', 
         //description: 'Estrategias eficaces para desarrollar habilidades lectoras en todos los niveles educativos.', 
         icon: '📚' 
     },
     { 
         value: 'conf_ia_educativa', 
-        label: 'Conferencia: Aplicación de la Inteligencia Artificial en el ámbito educativo', 
+        label: 'Aplicación de la Inteligencia Artificial en el ámbito educativo', 
         //description: 'Aplicación de la Inteligencia Artificial en el ámbito educativo.', 
         icon: '🤖' 
     },
     { 
         value: 'conf_habilidades_blandas', 
-        label: 'Conferencia: Desarrollo de habilidades blandas para fortalecer el razonamiento lógico y comprensión lectora en niños y niñas', 
+        label: 'Desarrollo de habilidades blandas para fortalecer el razonamiento lógico y comprensión lectora en niños y niñas', 
         //description: 'Desarrollo de habilidades blandas para fortalecer el razonamiento lógico y comprensión lectora en niños y niñas.', 
         icon: '💡' 
     },
     { 
         value: 'conf_paradigmas_bicentenario', 
-        label: 'Conferencia: Paradigmas y desafíos de la Educación en el Bicentenario', 
+        label: 'Paradigmas y desafíos de la Educación en el Bicentenario', 
         //description: 'Paradigmas y desafíos de la Educación en el Bicentenario.', 
         icon: '🎯' 
     },
     { 
         value: 'conf_orientacion_vocacional', 
-        label: 'Conferencia: Importancia de la Orientación Vocacional y Profesional en el SEP', 
+        label: 'Importancia de la Orientación Vocacional y Profesional en el SEP', 
         //description: 'Importancia de la Orientación Vocacional y Profesional en el SEP.', 
         icon: '🎓' 
     },
     { 
         value: 'conf_internacional', 
-        label: 'Conferencia: Conferencia Internacional', 
+        label: 'Conferencia Internacional', 
         //description: 'Conferencia Internacional.', 
         icon: '🌍' 
     },
     { 
         value: 'conf_andragogia', 
-        label: 'Conferencia: Andragogía', 
+        label: 'Andragogía: Estrategias para la educación de jóvenes y adultos en Educación Alternativa y Superior.', 
         //description: 'Estrategias para la educación de jóvenes y adultos en Educación Alternativa y Superior.', 
         icon: '👥' 
     },
     { 
         value: 'conf_educacion_inclusiva', 
-        label: 'Conferencia: Estrategias para la educación inclusiva', 
+        label: 'Estrategias para la educación inclusiva: Diseño y aplicación de metodologías diversas en el aula.', 
         //description: 'Diseño y aplicación de metodologías diversas en el aula.', 
         icon: '🤝' 
     }
