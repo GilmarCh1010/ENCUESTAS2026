@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ref, set, get, child } from 'firebase/database';
+import { ref, set, get, child, goOffline } from 'firebase/database';
 import { database } from './firebaseConfig';
 import { FLOW } from './constants';
 import { Message, Step, UserData } from './types';
@@ -288,7 +288,15 @@ export default function App() {
         completado: true
     };
 
-    set(ref(database, `encuestas_2026/${userData.ci}`), finalData);
+    // Save data and then force close connection to save bandwidth
+    set(ref(database, `encuestas_2026/${userData.ci}`), finalData)
+        .then(() => {
+            console.log("Datos guardados. Cerrando conexión.");
+            goOffline(database);
+        })
+        .catch((err) => {
+            console.error("Error guardando datos:", err);
+        });
   };
 
   // --- Correction Logic ---
