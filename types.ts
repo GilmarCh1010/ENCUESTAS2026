@@ -1,10 +1,11 @@
 export interface UserData {
-  [key: string]: string | undefined;
+  [key: string]: string | undefined | string[];
 }
 
 export interface Option {
   value: string;
   label: string;
+  description?: string; // Added for listing courses inside a cycle
   icon: string;
 }
 
@@ -14,12 +15,14 @@ export interface Step {
   delay?: number;
   input?: string;
   validation?: 'ci' | 'text' | 'optional';
-  options?: Option[];
+  options?: Option[] | ((data: UserData) => Option[]);
+  multiselect?: boolean;
   prompts?: string[];
   action?: 'saveData';
   questionLabel?: string;
   condition?: (data: UserData) => boolean;
   ifTrue?: Step;
+  externalLink?: string; // Added for the Google Drive link
 }
 
 export interface Message {
