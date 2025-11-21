@@ -919,14 +919,29 @@ export const FLOW: Step[] = [
     },
 
     // --- SUB-RAMA: NO CONOCE (Conoce=No) ---
+    // PASO 1: Solo muestra el PDF
     { 
         type: 'conditional', 
         condition: (data) => data.conoce_oferta === 'no', 
         ifTrue: { 
             type: 'bot', 
-            externalLink: 'https://drive.google.com/file/d/1nu3t_VeXoT5HCUZ8YHGB34nBi1ewAuLT/view?usp=sharing',
+            externalLink: 'https://drive.google.com/file/d/1nu3t_VeXoT5HCUZ8YHGB34nBi1ewAuLT/view?usp=sharing ',
             delay: 2000, 
-            message: 'A continuación le presentamos la oferta formativa con la cual se trabajó este año. (Revise el enlace PDF ☝️ si desea ver el detalle de ciclos disponibles).\n\n¿Qué factores influyeron para que no pueda ser partícipe de los cursos formativos de UNEFCO la gestión 2025?',            
+            message: 'A continuación le presentamos la oferta formativa con la cual se trabajó este año. (Revise el enlace PDF ☝️ si desea ver el detalle de ciclos disponibles).',
+            // Sin opciones aquí, solo el PDF
+            input: null, // No espera respuesta aún
+            questionLabel: null
+        } 
+    },
+    
+    // PASO 2: Luego de un tiempo o acción, muestra la pregunta
+    { 
+        type: 'conditional', 
+        condition: (data) => data.conoce_oferta === 'no' && data.vio_pdf === true, // O detecta cuando terminó de ver el PDF
+        ifTrue: { 
+            type: 'bot', 
+            delay: 3000, // Un delay adicional si es necesario
+            message: '¿Qué factores influyeron para que no pueda ser partícipe de los cursos formativos de UNEFCO la gestión 2025?',
             options: [
                 { value: 'falta_tiempo', label: 'Falta de tiempo', icon: '⏳' }, 
                 { value: 'no_interes', label: 'Los cursos/ciclos y/o talleres no son de mi interés', icon: '🤔' },
@@ -935,7 +950,7 @@ export const FLOW: Step[] = [
             input: 'factor_no_participacion', 
             questionLabel: 'Factor No Participación' 
         } 
-    },
+    }
 
     // --- SECCIÓN DE SUGERENCIAS (COMÚN PARA TODOS) ---
     {
