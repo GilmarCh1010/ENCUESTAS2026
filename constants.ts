@@ -940,11 +940,11 @@ export const FLOW: Step[] = [
     // --- SECCIÓN DE SUGERENCIAS (COMÚN PARA TODOS) ---
     {
         type: 'bot',
-        message: 'Para la Gestión 2026: Sugiera temas para CICLOS y CURSOS (Indicar que no hayan sido contemplado en la oferta formativa 2025)',
+        message: 'Sugiera temáticas para CONFERENCIAS magistrales (Indicar que no hayan sido contemplado en la oferta formativa 2025)',
         delay: 1000,
-        input: 'sugerencia_ciclos_2026',
+        input: 'sugerencia_conferencias_2026',
         validation: 'optional',
-        questionLabel: 'Sugerencia Ciclos'
+        questionLabel: 'Sugerencia Conferencias'
     },
     {
         type: 'bot',
@@ -953,15 +953,15 @@ export const FLOW: Step[] = [
         input: 'sugerencia_talleres_2026',
         validation: 'optional',
         questionLabel: 'Sugerencia Talleres'
-    },
+    }, 
     {
         type: 'bot',
-        message: 'Sugiera temáticas para CONFERENCIAS magistrales (Indicar que no hayan sido contemplado en la oferta formativa 2025)',
+        message: 'Para la Gestión 2026: Sugiera temas para CICLOS y CURSOS (Indicar que no hayan sido contemplado en la oferta formativa 2025)',
         delay: 1000,
-        input: 'sugerencia_conferencias_2026',
+        input: 'sugerencia_ciclos_2026',
         validation: 'optional',
-        questionLabel: 'Sugerencia Conferencias'
-    },
+        questionLabel: 'Sugerencia Ciclos'
+    },       
     { 
         type: 'bot', 
         message: '¿Qué modalidad se le hace más efectiva para la ejecución de los cursos?', 
