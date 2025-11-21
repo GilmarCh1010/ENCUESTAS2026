@@ -28,6 +28,9 @@ export default function App() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isCorrectionModalOpen, setIsCorrectionModalOpen] = useState(false);
   
+  // Multiselect State
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+
   // Correction mode state
   const [isCorrecting, setIsCorrecting] = useState(false);
   const [returnStepIndex, setReturnStepIndex] = useState(0);
@@ -35,6 +38,7 @@ export default function App() {
   // Refs
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const lastMessageRef = useRef<HTMLDivElement>(null); // Ref for the specific last message
 
   // --- Helper to get current active step (resolving conditionals) ---
   const getCurrentStep = (index: number, currentData: UserData): Step | null => {
@@ -74,9 +78,13 @@ export default function App() {
 
     // Mark this step as displayed/processed
     setDisplayedStepIndex(currentStepIndex);
+    
+    // Reset multiselect state for new steps
+    setSelectedOptions([]);
 
     // It's a valid bot message/question
-    if (activeStep.message && !activeStep.input && !activeStep.options && activeStep.action !== 'saveData') {
+    const hasOptions = activeStep.options !== undefined;
+    if (activeStep.message && !activeStep.input && !hasOptions && activeStep.action !== 'saveData') {
        // Simple text message, move to next after display
        setIsProcessing(true);
        setIsTyping(true);
@@ -90,10 +98,8 @@ export default function App() {
          setCurrentStepIndex(prev => prev + 1);
        }, activeStep.delay || 1000);
 
-    } else if (activeStep.message && (activeStep.input || activeStep.options)) {
+    } else if (activeStep.message && (activeStep.input || hasOptions)) {
        // Question requiring input
-       // Only trigger typing if we haven't shown this message yet (check active inputs)
-       // But in this simple flow, we just show it.
        setIsProcessing(true);
        setIsTyping(true);
 
@@ -106,7 +112,6 @@ export default function App() {
          // Wait for user input (don't advance step)
          setTimeout(() => {
              if (inputRef.current) inputRef.current.focus();
-             scrollToBottom();
          }, 100);
        }, activeStep.delay || 1000);
     } else if (activeStep.action === 'saveData') {
@@ -129,9 +134,37 @@ export default function App() {
     }
   };
 
+  const activeStep = getCurrentStep(currentStepIndex, userData);
+  // Resolve dynamic options
+  const currentOptions = activeStep && activeStep.options 
+      ? (typeof activeStep.options === 'function' ? activeStep.options(userData) : activeStep.options)
+      : [];
+  const showOptionsInput = currentOptions.length > 0;
+
+  // --- Updated Scroll Logic ---
   useEffect(() => {
+    if (isTyping) {
+        scrollToBottom();
+        return;
+    }
+
+    // Logic: If we are showing a list of options (especially long ones), 
+    // we want to scroll the *Question* (last message) to the top of the view, 
+    // not scroll to the very bottom of the page.
+    if (messages.length > 0 && showOptionsInput) {
+        const lastMsg = messages[messages.length - 1];
+        if (lastMsg.isBot) {
+             setTimeout(() => {
+                // Scroll the message (question) to the start (top) of the container
+                lastMessageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+             }, 100);
+             return;
+        }
+    }
+    
+    // Default behavior: scroll to bottom
     scrollToBottom();
-  }, [messages, isTyping]);
+  }, [messages, isTyping, showOptionsInput]);
 
   // --- Logic ---
   const addMessage = (type: 'incoming' | 'outgoing', text: string) => {
@@ -164,6 +197,15 @@ export default function App() {
     const step = getCurrentStep(currentStepIndex, userData);
     if (!step) return;
 
+    if (step.multiselect) {
+        // Toggle selection
+        setSelectedOptions(prev => {
+            if (prev.includes(value)) return prev.filter(v => v !== value);
+            return [...prev, value];
+        });
+        return; // Don't advance yet
+    }
+
     setIsProcessing(true);
     addMessage('outgoing', label);
     
@@ -171,6 +213,24 @@ export default function App() {
     setUserData(newData);
     
     handleNextStep(newData);
+  };
+
+  const handleConfirmMultiselect = () => {
+      const step = getCurrentStep(currentStepIndex, userData);
+      if (!step || !step.input) return;
+
+      setIsProcessing(true);
+      const labelText = selectedOptions.length > 0 
+          ? `${selectedOptions.length} opciones seleccionadas` 
+          : 'Ninguna opción seleccionada';
+          
+      addMessage('outgoing', labelText);
+      
+      // Save array of values
+      const newData = { ...userData, [step.input]: selectedOptions };
+      setUserData(newData);
+      
+      handleNextStep(newData);
   };
 
   const handleNextStep = (updatedData: UserData) => {
@@ -223,32 +283,8 @@ export default function App() {
   const saveDataToFirebase = () => {
     if (!userData.ci) return;
     const finalData = {
-        datos_generales: { 
-            ci: userData.ci, 
-            timestamp: new Date().toISOString() 
-        },
-        contexto_laboral: { 
-            area: userData.area_trabajo, 
-            tipo_ue: userData.tipo_ue, 
-            nombre_ue: userData.nombre_ue, 
-            distrito: userData.distrito, 
-            subsistema: userData.subsistema, 
-            funcion: userData.funcion 
-        },
-        evaluacion_2025: { 
-            conoce_oferta: userData.conoce_oferta_2025, 
-            participo: userData.participo_2025 || 'no', 
-            aplicacion_practica: userData.aplicacion_practica || 'no_aplica', 
-            acuerdo_metodologia: userData.acuerdo_metodologia || 'no_aplica', 
-            calidad_contenido: userData.calidad_contenido || 'no_aplica' 
-        },
-        propuesta_2026: { 
-            sugerencia_ciclos: userData.sugerencia_ciclos || '', 
-            sugerencia_talleres: userData.sugerencia_talleres || '', 
-            sugerencia_conferencias: userData.sugerencia_conferencias || '', 
-            aspectos_mejora: userData.aspectos_mejora || '', 
-            comentarios_finales: userData.comentarios_finales || '' 
-        },
+        ...userData,
+        timestamp: new Date().toISOString(),
         completado: true
     };
 
@@ -270,16 +306,16 @@ export default function App() {
 
       setCurrentStepIndex(index);
       setDisplayedStepIndex(-1); // Force re-display of the correction step
+      setSelectedOptions([]); // Clear select
       
       addMessage('incoming', `✏️ Modificando: ${targetStep.questionLabel}.`);
       setIsProcessing(false);
   };
 
   // --- Render Helpers ---
-  const activeStep = getCurrentStep(currentStepIndex, userData);
-  const showInputArea = !isProcessing && activeStep && (activeStep.input || activeStep.options) && activeStep.action !== 'saveData';
-  const showTextInput = activeStep?.input && (!activeStep.options || activeStep.options.length === 0);
-  const showOptionsInput = activeStep?.options && activeStep.options.length > 0;
+  
+  const showInputArea = !isProcessing && activeStep && (activeStep.input || currentOptions.length > 0) && activeStep.action !== 'saveData';
+  const showTextInput = activeStep?.input && currentOptions.length === 0;
   const isBtnDisabled = activeStep?.validation !== 'optional' && !inputValue.trim();
 
   // Input type logic
@@ -319,8 +355,13 @@ export default function App() {
             backgroundSize: '100px'
         }}
       >
-        {messages.map((msg) => (
-          <div key={msg.id} className={`mb-4 flex items-end ${msg.type === 'incoming' ? 'justify-start' : 'justify-end'} animate-[slideIn_0.2s_ease-out]`}>
+        {messages.map((msg, index) => (
+          <div 
+            key={msg.id} 
+            // Attach ref to the last message
+            ref={index === messages.length - 1 ? lastMessageRef : null}
+            className={`mb-4 flex items-end ${msg.type === 'incoming' ? 'justify-start' : 'justify-end'} animate-[slideIn_0.2s_ease-out]`}
+          >
             {msg.type === 'incoming' && <SmallBotAvatar />}
             <div className={`max-w-[85%] px-4 py-3 rounded-lg text-[15px] leading-relaxed shadow-[0_1px_3px_rgba(0,0,0,0.1)] whitespace-pre-wrap break-words ${
                 msg.type === 'incoming' 
@@ -331,6 +372,28 @@ export default function App() {
             </div>
           </div>
         ))}
+
+        {/* External Link Display (Google Drive) */}
+        {activeStep?.externalLink && !isProcessing && (
+            <div className="mb-4 flex justify-start animate-[slideIn_0.2s_ease-out]">
+                <SmallBotAvatar />
+                <a 
+                    href={activeStep.externalLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="block bg-white rounded-lg overflow-hidden shadow-md max-w-[85%] text-decoration-none hover:bg-gray-50 transition-colors border border-gray-200"
+                >
+                    <div className="bg-red-600 text-white p-3 flex items-center">
+                         <span className="text-2xl mr-2">📄</span>
+                         <span className="font-bold text-sm">PDF: Oferta Formativa</span>
+                    </div>
+                    <div className="p-4">
+                        <p className="text-[#333] text-sm font-semibold mb-1">Ver documento completo</p>
+                        <p className="text-gray-500 text-xs truncate">{activeStep.externalLink}</p>
+                    </div>
+                </a>
+            </div>
+        )}
 
         {/* Typing Indicator */}
         {isTyping && (
@@ -343,19 +406,57 @@ export default function App() {
         
         {/* Options Display */}
         {showOptionsInput && !isProcessing && (
-            <div className="message incoming mb-4 flex justify-start animate-[slideIn_0.2s_ease-out]">
-                <div className="flex flex-wrap gap-2 mt-1 w-full max-w-[95%]">
-                    {activeStep.options?.map((opt) => (
-                        <div 
-                            key={opt.value}
-                            onClick={() => handleOptionClick(opt.value, opt.label)}
-                            className="flex-1 min-w-[130px] p-2.5 bg-white border border-[#e0e0e0] rounded-xl cursor-pointer text-center transition-all shadow-sm active:bg-[#f0f0f0] active:scale-[0.98] flex flex-col items-center justify-center"
-                        >
-                            <span className="text-2xl mb-1 block">{opt.icon}</span>
-                            <span className="text-sm text-[#333]">{opt.label}</span>
-                        </div>
-                    ))}
+            <div className="message incoming mb-4 flex flex-col justify-start animate-[slideIn_0.2s_ease-out] max-w-full">
+                <div className="flex flex-col gap-2 mt-1 w-full pl-10 pr-2">
+                    {currentOptions.map((opt) => {
+                        const isSelected = selectedOptions.includes(opt.value);
+                        return (
+                            <div 
+                                key={opt.value}
+                                onClick={() => handleOptionClick(opt.value, opt.label)}
+                                className={`w-full p-3 border rounded-xl cursor-pointer text-left transition-all shadow-sm flex flex-row items-start
+                                    ${isSelected 
+                                        ? 'bg-[#dcf8c6] border-[#25d366] ring-2 ring-[#25d366]/50' 
+                                        : 'bg-white border-[#e0e0e0] hover:bg-gray-50'}
+                                `}
+                            >
+                                <span className="text-2xl mr-3 mt-1 shrink-0">{opt.icon}</span>
+                                <div className="flex-1">
+                                    <span className="text-sm text-[#333] font-bold block mb-1">{opt.label}</span>
+                                    {opt.description && (
+                                        <span className="text-xs text-gray-600 block leading-relaxed whitespace-pre-line border-t border-gray-100 mt-1 pt-1">
+                                            {opt.description}
+                                        </span>
+                                    )}
+                                </div>
+                                {activeStep?.multiselect && (
+                                    <div className={`w-6 h-6 rounded-full border-2 ml-2 mt-1 shrink-0 flex items-center justify-center
+                                        ${isSelected ? 'bg-[#25d366] border-[#25d366]' : 'border-gray-300'}
+                                    `}>
+                                        {isSelected && <span className="text-white text-xs">✓</span>}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
                 </div>
+                
+                {/* Confirm Button for Multiselect */}
+                {activeStep?.multiselect && (
+                    <div className="pl-10 pr-2 mt-3 w-full">
+                        <button 
+                            onClick={handleConfirmMultiselect}
+                            className="w-full bg-[#122a5e] text-white py-3 rounded-xl font-bold shadow-md active:scale-[0.98] transition-transform flex items-center justify-center gap-2"
+                        >
+                            <span>✅ Confirmar Selección</span>
+                            {selectedOptions.length > 0 && (
+                                <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs">
+                                    {selectedOptions.length}
+                                </span>
+                            )}
+                        </button>
+                    </div>
+                )}
             </div>
         )}
 
@@ -447,13 +548,18 @@ export default function App() {
                           
                           // Only show steps with question labels and stored data
                           if (s.questionLabel && s.input && userData[s.input]) {
+                              // Handle display for arrays (multiselect)
+                              const displayVal = Array.isArray(userData[s.input]) 
+                                  ? (userData[s.input] as string[]).join(', ')
+                                  : userData[s.input];
+
                               return (
                                   <li 
                                     key={index}
                                     onClick={() => handleSelectCorrection(index)}
                                     className="p-3 border-b border-[#ddd] cursor-pointer hover:bg-gray-100"
                                   >
-                                      <strong>{s.questionLabel}:</strong> {userData[s.input]}
+                                      <strong>{s.questionLabel}:</strong> <span className="text-sm text-gray-600 block truncate">{displayVal}</span>
                                   </li>
                               );
                           }
