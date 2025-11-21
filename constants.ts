@@ -716,7 +716,7 @@ export const FLOW: Step[] = [
             { value: 'primaria', label: 'Educación primaria', icon: '🎒' }, 
             { value: 'secundaria', label: 'Educación secundaria', icon: '👱' },
             { value: 'especial', label: 'Educación especial', icon: '♿' },
-            { value: 'alternativa', label: 'Educación Alternativa', icon: '🛠️' },
+            { value: 'alternativa', label: 'Educación Alternativa', icon: '📚' },
             { value: 'superior', label: 'Institutos Técnicos -Tecnológicos', icon: '🎓' }
         ], 
         input: 'subsistema', 
@@ -774,7 +774,7 @@ export const FLOW: Step[] = [
         condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
         ifTrue: { 
             type: 'bot', 
-            message: '1.1 Marque qué CONFERENCIAS fueron de su mayor agrado (fue partícipe). Puede seleccionar varias.', 
+            message: 'Marque qué CONFERENCIAS fueron de su mayor agrado (fue partícipe). Puede seleccionar varias.', 
             delay: 1000, 
             options: getConferenceOptions, 
             multiselect: true,
@@ -789,7 +789,7 @@ export const FLOW: Step[] = [
         condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
         ifTrue: { 
             type: 'bot', 
-            message: '1.2 Marque qué TALLERES fueron de su mayor agrado (fue partícipe). Puede seleccionar varios.', 
+            message: 'Marque qué TALLERES fueron de su mayor agrado (fue partícipe). Puede seleccionar varios.', 
             delay: 1000, 
             options: getWorkshopOptions, 
             multiselect: true,
@@ -804,7 +804,7 @@ export const FLOW: Step[] = [
         condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
         ifTrue: { 
             type: 'bot', 
-            message: '1.3 Marque qué CICLOS/CURSOS fueron de su mayor agrado (fue partícipe). Puede seleccionar varios.', 
+            message: 'Marque qué CICLOS/CURSOS fueron de su mayor agrado (fue partícipe). Puede seleccionar varios.', 
             delay: 1000, 
             options: getCourseOptions, // Full List
             multiselect: true, // Enable selecting multiple
@@ -818,7 +818,7 @@ export const FLOW: Step[] = [
         condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
         ifTrue: { 
             type: 'bot', 
-            message: '2 ¿Los cursos de los cuales fue participe, considera que fueron aplicados en la práctica educativa que desarrollo en la gestión 2025?', 
+            message: '¿Los cursos de los cuales fue participe, considera que fueron aplicados en la práctica educativa que desarrollo en la gestión 2025?', 
             delay: 1000, 
             options: [
                 { value: 'muy_aplicables', label: 'Muy aplicables', icon: '⭐' }, 
@@ -834,7 +834,7 @@ export const FLOW: Step[] = [
         condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
         ifTrue: { 
             type: 'bot', 
-            message: '3 ¿Considera que la metodología aplicada durante la gestión 2025 fue oportuna, clara y concreta?', 
+            message: '¿Considera que la metodología aplicada durante la gestión 2025 fue oportuna, clara y concreta?', 
             delay: 1000, 
             options: [
                 { value: 'buena', label: 'BUENA', icon: '✅' }, 
@@ -924,9 +924,9 @@ export const FLOW: Step[] = [
         condition: (data) => data.conoce_oferta === 'no', 
         ifTrue: { 
             type: 'bot', 
-            message: 'A continuación le presentamos la oferta formativa con la cual se trabajó este año. (Revise el enlace PDF 👇 si desea ver el detalle de ciclos disponibles).\n\n¿Qué factores influyeron para que no pueda ser partícipe de los cursos formativos de UNEFCO la gestión 2025?', 
-            delay: 2000, 
             externalLink: 'https://drive.google.com/file/d/1nu3t_VeXoT5HCUZ8YHGB34nBi1ewAuLT/view?usp=sharing',
+            delay: 2000, 
+            message: 'A continuación le presentamos la oferta formativa con la cual se trabajó este año. (Revise el enlace PDF ☝️ si desea ver el detalle de ciclos disponibles).\n\n¿Qué factores influyeron para que no pueda ser partícipe de los cursos formativos de UNEFCO la gestión 2025?',            
             options: [
                 { value: 'falta_tiempo', label: 'Falta de tiempo', icon: '⏳' }, 
                 { value: 'no_interes', label: 'Los cursos/ciclos y/o talleres no son de mi interés', icon: '🤔' },
@@ -940,7 +940,7 @@ export const FLOW: Step[] = [
     // --- SECCIÓN DE SUGERENCIAS (COMÚN PARA TODOS) ---
     {
         type: 'bot',
-        message: '5 Para la Gestión 2026: Sugiera temas para CICLOS y CURSOS (Indicar que no hayan sido contemplado en la oferta formativa 2025)',
+        message: 'Para la Gestión 2026: Sugiera temas para CICLOS y CURSOS (Indicar que no hayan sido contemplado en la oferta formativa 2025)',
         delay: 1000,
         input: 'sugerencia_ciclos_2026',
         validation: 'optional',
@@ -948,7 +948,7 @@ export const FLOW: Step[] = [
     },
     {
         type: 'bot',
-        message: '6 Sugiera temas específicos para TALLERES (Cortos y prácticos) (Indicar que no hayan sido contemplado en la oferta formativa 2025)',
+        message: 'Sugiera temas específicos para TALLERES (Cortos y prácticos) (Indicar que no hayan sido contemplado en la oferta formativa 2025)',
         delay: 1000,
         input: 'sugerencia_talleres_2026',
         validation: 'optional',
@@ -956,7 +956,7 @@ export const FLOW: Step[] = [
     },
     {
         type: 'bot',
-        message: '7 Sugiera temáticas para CONFERENCIAS magistrales (Indicar que no hayan sido contemplado en la oferta formativa 2025)',
+        message: 'Sugiera temáticas para CONFERENCIAS magistrales (Indicar que no hayan sido contemplado en la oferta formativa 2025)',
         delay: 1000,
         input: 'sugerencia_conferencias_2026',
         validation: 'optional',
@@ -964,7 +964,7 @@ export const FLOW: Step[] = [
     },
     { 
         type: 'bot', 
-        message: '8 ¿Qué modalidad se le hace más efectiva para la ejecución de los cursos?', 
+        message: '¿Qué modalidad se le hace más efectiva para la ejecución de los cursos?', 
         delay: 1000, 
         options: [
             { value: 'presencial', label: 'Presencial (Talleres)', icon: '🏢' }, 
@@ -976,7 +976,7 @@ export const FLOW: Step[] = [
     },
     { 
         type: 'bot', 
-        message: '9 COMENTARIOS FINALES: Algún aspecto que no se haya contemplado u omitido en el presente cuestionario.', 
+        message: 'COMENTARIOS FINALES: Algún aspecto que no se haya contemplado u omitido en el presente cuestionario.', 
         delay: 1000, 
         input: 'comentarios_finales', 
         validation: 'optional', 
@@ -986,7 +986,7 @@ export const FLOW: Step[] = [
     // --- CIERRE ---
     { 
         type: 'bot', 
-        message: '¡MUCHAS GRACIAS! SUS RESPUESTAS HAN SIDO GUARDADAS.', 
+        message: '¡MUCHAS GRACIAS! Sus respuestas han sido guardadas.', 
         delay: 1500, 
         action: 'saveData' 
     }
