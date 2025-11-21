@@ -641,12 +641,12 @@ export const FLOW: Step[] = [
     // --- BIENVENIDA E INTRODUCCIÓN ---
     { 
         type: 'bot', 
-        message: '👋🏛️ *PROPUESTA FORMATIVA GESTIÓN 2026*\n\nSean bienvenidos y bienvenidas, gracias por brindarnos unos minutos de su tiempo.\n\nLa Unidad Especializada De Formación Continua “UNEFCO”, ha desarrollado este cuestionario con la finalidad de evaluar la ejecución de la oferta formativa 2025 y a su vez atender sus necesidades, requerimientos y expectativas, logrando de esta manera concretarlas en la oferta académica 2026.', 
+        message: '👋🏛️ *PROPUESTA FORMATIVA GESTIÓN 2026*\n\n👋 Sean bienvenidos y bienvenidas, gracias por brindarnos unos minutos de su tiempo ⏱️.\n\nLa Unidad Especializada De Formación Continua "UNEFCO", ha desarrollado este cuestionario 📋 con la finalidad de evaluar 📊 la ejecución de la oferta formativa 2025 📚 y a su vez atender sus necesidades, requerimientos y expectativas 💼, logrando de esta manera concretarlas en la oferta académica 2026 📅.', 
         delay: 1000 
     },
     {
         type: 'bot',
-        message: 'Agradecemos y valoramos el tiempo que le dedicas a responder este cuestionario.\nCabe señalar que las respuestas serán manejadas de manera profesional con fines estrictamente educativos.\nPor favor, señale, marque la opción que mejor se adecue a su criterio.',
+        message: 'Agradecemos y valoramos el tiempo que le dedicas a responder este cuestionario 🙏⏱️.\nCabe señalar que las respuestas serán manejadas de manera profesional con fines estrictamente educativos 🔒🎓.\nPor favor, señale, marque la opción que mejor se adecue a su criterio✅👉.',
         delay: 1500
     },
 
