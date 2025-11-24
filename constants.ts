@@ -637,7 +637,7 @@ const getCourseOptions = (data: UserData): Option[] => {
     // Categorize specific courses
     const specificList = (SPECIFIC_CYCLES[sub] || []).map(opt => ({
         ...opt,
-        category: `🎯 OFERTA ESPECÍFICA (${sub.toUpperCase()})`
+        category: `🎯 CICLOS FORMATIVOS PARA EDUCACIÓN (${sub.toUpperCase()})`
     }));
 
     // Categorize common courses
