@@ -1,3 +1,4 @@
+
 export interface UserData {
   [key: string]: string | undefined | string[];
 }
@@ -7,6 +8,7 @@ export interface Option {
   label: string;
   description?: string; // Added for listing courses inside a cycle
   icon: string;
+  category?: string; // Added for visual grouping (headers)
 }
 
 export interface Step {
