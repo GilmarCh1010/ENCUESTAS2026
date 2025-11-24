@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { ref, set, get, child, goOffline } from 'firebase/database';
 import { database } from './firebaseConfig';
@@ -416,35 +417,47 @@ export default function App() {
         {showOptionsInput && !isProcessing && (
             <div className="message incoming mb-4 flex flex-col justify-start animate-[slideIn_0.2s_ease-out] max-w-full">
                 <div className="flex flex-col gap-2 mt-1 w-full pl-10 pr-2">
-                    {currentOptions.map((opt) => {
+                    {currentOptions.map((opt, index) => {
                         const isSelected = selectedOptions.includes(opt.value);
+                        // Header logic: show if first item OR if category changes
+                        const prevOpt = index > 0 ? currentOptions[index - 1] : null;
+                        const showHeader = opt.category && (!prevOpt || prevOpt.category !== opt.category);
+
                         return (
-                            <div 
-                                key={opt.value}
-                                onClick={() => handleOptionClick(opt.value, opt.label)}
-                                className={`w-full p-3 border rounded-xl cursor-pointer text-left transition-all shadow-sm flex flex-row items-start
-                                    ${isSelected 
-                                        ? 'bg-[#dcf8c6] border-[#25d366] ring-2 ring-[#25d366]/50' 
-                                        : 'bg-white border-[#e0e0e0] hover:bg-gray-50'}
-                                `}
-                            >
-                                <span className="text-2xl mr-3 mt-1 shrink-0">{opt.icon}</span>
-                                <div className="flex-1">
-                                    <span className="text-sm text-[#333] font-bold block mb-1">{opt.label}</span>
-                                    {opt.description && (
-                                        <span className="text-xs text-gray-600 block leading-relaxed whitespace-pre-line border-t border-gray-100 mt-1 pt-1">
-                                            {opt.description}
-                                        </span>
-                                    )}
-                                </div>
-                                {activeStep?.multiselect && (
-                                    <div className={`w-6 h-6 rounded-full border-2 ml-2 mt-1 shrink-0 flex items-center justify-center
-                                        ${isSelected ? 'bg-[#25d366] border-[#25d366]' : 'border-gray-300'}
-                                    `}>
-                                        {isSelected && <span className="text-white text-xs">✓</span>}
+                            <React.Fragment key={opt.value}>
+                                {showHeader && (
+                                    <div className="w-full py-2 px-1 mt-2 mb-1 sticky top-0 z-10 bg-[#e5ddd5]/95 backdrop-blur-sm">
+                                        <h4 className="text-[#122a5e] font-extrabold text-sm uppercase tracking-wider border-b-2 border-[#122a5e] pb-1 shadow-sm">
+                                            {opt.category}
+                                        </h4>
                                     </div>
                                 )}
-                            </div>
+                                <div 
+                                    onClick={() => handleOptionClick(opt.value, opt.label)}
+                                    className={`w-full p-3 border rounded-xl cursor-pointer text-left transition-all shadow-sm flex flex-row items-start
+                                        ${isSelected 
+                                            ? 'bg-[#dcf8c6] border-[#25d366] ring-2 ring-[#25d366]/50' 
+                                            : 'bg-white border-[#e0e0e0] hover:bg-gray-50'}
+                                    `}
+                                >
+                                    <span className="text-2xl mr-3 mt-1 shrink-0">{opt.icon}</span>
+                                    <div className="flex-1">
+                                        <span className="text-sm text-[#333] font-bold block mb-1">{opt.label}</span>
+                                        {opt.description && (
+                                            <span className="text-xs text-gray-600 block leading-relaxed whitespace-pre-line border-t border-gray-100 mt-1 pt-1">
+                                                {opt.description}
+                                            </span>
+                                        )}
+                                    </div>
+                                    {activeStep?.multiselect && (
+                                        <div className={`w-6 h-6 rounded-full border-2 ml-2 mt-1 shrink-0 flex items-center justify-center
+                                            ${isSelected ? 'bg-[#25d366] border-[#25d366]' : 'border-gray-300'}
+                                        `}>
+                                            {isSelected && <span className="text-white text-xs">✓</span>}
+                                        </div>
+                                    )}
+                                </div>
+                            </React.Fragment>
                         );
                     })}
                 </div>
