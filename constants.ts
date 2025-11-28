@@ -722,7 +722,7 @@ export const FLOW: Step[] = [
     },
     { 
         type: 'bot', 
-        message: '¿A qué subsistema de educación pertenece?', 
+        message: '¿Cuál de las siguientes modalidades de educación pertenece?', 
         delay: 1000, 
         options: [
             { value: 'inicial', label: 'Educación inicial', icon: '👶' }, 
