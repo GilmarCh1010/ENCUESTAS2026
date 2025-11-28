@@ -426,7 +426,7 @@ export default function App() {
                         return (
                             <React.Fragment key={opt.value}>
                                 {showHeader && (
-                                    <div className="w-full py-2 px-1 mt-2 mb-1 sticky top-0 z-10 bg-[#e5ddd5]/95 backdrop-blur-sm">
+                                    <div className="w-full py-2 px-1 mt-2 mb-1 sticky top-[-18px] z-10 bg-[#e5ddd5]/95 backdrop-blur-sm">
                                         <h4 className="text-[#122a5e] font-extrabold text-sm uppercase tracking-wider border-b-2 border-[#122a5e] pb-1 shadow-sm">
                                             {opt.category}
                                         </h4>
