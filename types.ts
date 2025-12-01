@@ -9,6 +9,7 @@ export interface Option {
   description?: string; // Added for listing courses inside a cycle
   icon: string;
   category?: string; // Added for visual grouping (headers)
+  bgColor?: string; // Added for custom background colors (e.g. per subsystem)
 }
 
 export interface Step {
@@ -32,4 +33,5 @@ export interface Message {
   type: 'incoming' | 'outgoing';
   text: string;
   isBot: boolean;
+  stepIndex?: number;
 }
