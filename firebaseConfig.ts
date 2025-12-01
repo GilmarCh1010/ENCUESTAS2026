@@ -15,4 +15,8 @@ const app = !firebase.apps.length
     ? firebase.initializeApp(firebaseConfig) 
     : firebase.app();
 
+<<<<<<< HEAD
 export const database = app.database();
+=======
+export const database = app.database();
+>>>>>>> b1a163695bf999dd7635442fe3c4fae093cd338c

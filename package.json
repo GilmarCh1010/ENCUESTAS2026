@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "name": "unefco-oficial---encuesta-2026",
+=======
+  "name": "unefco---asistente-de-formación-2026",
+>>>>>>> b1a163695bf999dd7635442fe3c4fae093cd338c
   "private": true,
   "version": "0.0.0",
   "type": "module",
