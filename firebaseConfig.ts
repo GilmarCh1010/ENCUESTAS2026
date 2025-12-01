@@ -1,5 +1,5 @@
-import { initializeApp } from 'firebase/app';
-import { getDatabase } from 'firebase/database';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/database';
 
 // NOTE: In a production Vercel environment, these should be environment variables.
 // process.env.REACT_APP_FIREBASE_API_KEY, etc.
@@ -10,5 +10,9 @@ const firebaseConfig = {
     projectId: "profesores-encuesta-2025"
 };
 
-const app = initializeApp(firebaseConfig);
-export const database = getDatabase(app);
+// Initialize Firebase (check if already initialized)
+const app = !firebase.apps.length 
+    ? firebase.initializeApp(firebaseConfig) 
+    : firebase.app();
+
+export const database = app.database();
