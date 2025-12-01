@@ -1,5 +1,86 @@
-
 import { Step, Option, UserData } from './types';
+
+// --- CONSTANTS: COLORS ---
+const SUBSYSTEM_COLORS: Record<string, string> = {
+    'inicial': '#F8BBD0', // Rosa claro
+    'primaria': '#C8E6C9', // Verde claro
+    'secundaria': '#E1BEE7', // Lila claro
+    'alternativa': '#B3E5FC', // Celeste claro
+    'especial': '#D7CCC8', // Marron claro
+    'superior': '#FFE0B2', // Naranja claro
+};
+
+// Guindo claro (Light Red/Burgundy) for General Offer
+const COMMON_CYCLE_COLOR = '#EF9A9A'; 
+
+// Colors requested
+const CONFERENCE_COLOR = '#D1C4E9'; // Violeta claro
+const WORKSHOP_COLOR = '#BBDEFB'; // Azul claro
+
+// --- DATA: DISTRITOS EDUCATIVOS POR DEPARTAMENTO ---
+const DISTRICTS_DATA: Record<string, string[]> = {
+    'La Paz': [
+        'La Paz 1', 'La Paz 2', 'La Paz 3', 
+        'El Alto 1', 'El Alto 2', 'El Alto 3', 'El Alto 4', 
+        'Viacha', 'Achacachi', 'Caranavi', 'Patacamaya', 
+        'Sica Sica', 'Coroico', 'Chulumani', 'Irupana', 
+        'Sorata', 'Copacabana', 'Desaguadero', 'Guanay', 'Mapiri',
+        'Palos Blancos', 'San Buenaventura', 'Ixiamas'
+    ],
+    'Cochabamba': [
+        'Cochabamba 1', 'Cochabamba 2', 
+        'Quillacollo', 'Sacaba', 'Colcapirhua', 'Tiquipaya', 'Vinto', 'Sipe Sipe',
+        'Punata', 'Cliza', 'Arani', 'Tarata', 
+        'Mizque', 'Aiquile', 'Totora', 
+        'Villa Tunari', 'Chimoré', 'Puerto Villarroel', 'Entre Ríos', 
+        'Capinota', 'Independencia', 'Morochata'
+    ],
+    'Santa Cruz': [
+        'Santa Cruz 1', 'Santa Cruz 2', 'Santa Cruz 3',
+        'Plan 3000', 'Pampa de la Isla', 'Villa 1ro de Mayo',
+        'Montero', 'Warnes', 'La Guardia', 'El Torno', 'Cotoca', 
+        'Camiri', 'Vallegrande', 'San Julián', 'Cuatro Cañadas', 
+        'San Ignacio de Velasco', 'San José de Chiquitos', 'Roboré', 
+        'Puerto Suárez', 'Yapacaní', 'Ascensión de Guarayos'
+    ],
+    'Chuquisaca': [
+        'Sucre', 'Yotala', 'Poroma',
+        'Camargo', 'San Lucas', 'Villa Charcas',
+        'Monteagudo', 'Huacareta', 'Muyupampa',
+        'Tarabuco', 'Yamparáez', 'Zudáñez', 'Padilla', 'Sopachuy',
+        'Azurduy', 'Macharetí'
+    ],
+    'Tarija': [
+        'Tarija', 'Padcaya', 'Bermejo', 
+        'Yacuiba', 'Villa Montes', 'Caraparí', 
+        'Uriondo', 'San Lorenzo', 'El Puente', 'Entre Ríos'
+    ],
+    'Potosí': [
+        'Potosí', 'Yocalla', 'Betanzos', 'Chaqui', 
+        'Uyuni', 'Colcha K', 'Llica', 'Tahua',
+        'Tupiza', 'Villazón', 'Cotagaita', 'Atocha',
+        'Uncía', 'Llallagua', 'Chayanta', 'Siglo XX',
+        'Sacaca', 'San Pedro de Buena Vista'
+    ],
+    'Oruro': [
+        'Oruro', 'Caracollo', 'Sorasora',
+        'Challapata', 'Huanuni', 'Poopó', 
+        'Sabaya', 'Curahuara de Carangas', 'Huachacalla',
+        'Salinas de Garci Mendoza', 'Toledo', 'Eucaliptus'
+    ],
+    'Beni': [
+        'Trinidad', 'San Javier', 
+        'Riberalta', 'Guayaramerín', 
+        'San Borja', 'Rurrenabaque', 'Reyes', 'Santa Rosa',
+        'Santa Ana del Yacuma', 'San Ignacio de Moxos', 
+        'Magdalena', 'Baures', 'Huacaraje'
+    ],
+    'Pando': [
+        'Cobija', 'Porvenir', 'Bolpebra', 'Bella Flor',
+        'Puerto Rico', 'San Pedro', 'Filadelfia', 
+        'El Sena', 'San Lorenzo', 'Gonzalo Moreno'
+    ]
+};
 
 // --- DATA: CONFERENCIAS (PARA TODOS LOS SUBSISTEMAS) ---
 const COMMON_CONFERENCES: Option[] = [
@@ -241,7 +322,7 @@ const COMMON_CYCLES: Option[] = [
     { 
         value: 'herramientas_sexualidad', 
         label: 'Ciclo: Herramientas para la Educación Integral en Sexualidad', 
-        description: '• Transformando prácticas desde la perspectiva de la EIS.\n• Técnicas grupales para el trabajo comunitario en la EIS.\n• Técnicas vivenciales para las prácticas pedagógicas.',
+        description: '• Transformando prácticas desde la perspectiva de la EIS.\n• Técnicas grupales para el trabajo comunitario en la EIS.\n• Técnicas vivenciales para las prácticas pedagógicas.', 
         icon: '🛠️' 
     },
     { 
@@ -411,127 +492,127 @@ const SPECIFIC_CYCLES: Record<string, Option[]> = {
         { 
             value: 'ciclo_aprendizaje_proyectos_secundaria', 
             label: 'Ciclo: Aprendizaje Basado en Proyectos para Educación Secundaria', 
-            description: '• Diseño y elaboración de proyectos educativos en educación secundaria.\n• Estrategias para la implementación del aprendizaje basado en proyectos.\n• Implementación y evaluación del aprendizaje basado en proyectos.',
+            description: '• Diseño y elaboración de proyectos educativos en educación secundaria.\n• Estrategias para la implementación del aprendizaje basado en proyectos.\n• Implementación y evaluación del aprendizaje basado en proyectos.', 
             icon: '📐' 
         },
         { 
             value: 'ciclo_ia_matematica_secundaria', 
             label: 'Ciclo: Uso de Herramientas Tecnológicas e Inteligencia Artificial Aplicadas al Área de Matemática', 
-            description: '• Uso de herramientas tecnológicas para la presentación de contenidos interactivos para el área de matemática.\n• Manejo de la tecnología e inteligencia artificial para el empoderamiento y la participación TEP, enfocada al área de matemática.\n• Uso de herramientas tecnológicas para la evaluación interactiva en el área de matemática.',
+            description: '• Uso de herramientas tecnológicas para la presentación de contenidos interactivos para el área de matemática.\n• Manejo de la tecnología e inteligencia artificial para el empoderamiento y la participación TEP, enfocada al área de matemática.\n• Uso de herramientas tecnológicas para la evaluación interactiva en el área de matemática.', 
             icon: '🤖' 
         },
         { 
             value: 'ciclo_ia_fisica_secundaria', 
             label: 'Ciclo: Uso de Herramientas Tecnológicas e Inteligencia Artificial Aplicadas en el Área de Física', 
-            description: '• Uso de herramientas tecnológicas para la presentación de contenidos interactivos para el área de física.\n• Manejo de la tecnología e inteligencia artificial para el empoderamiento y la participación TEP, enfocada al área de física.\n• Uso de herramientas tecnológicas para la evaluación interactiva en el área de física.',
+            description: '• Uso de herramientas tecnológicas para la presentación de contenidos interactivos para el área de física.\n• Manejo de la tecnología e inteligencia artificial para el empoderamiento y la participación TEP, enfocada al área de física.\n• Uso de herramientas tecnológicas para la evaluación interactiva en el área de física.', 
             icon: '🤖' 
         },
         { 
             value: 'ciclo_ia_quimica_secundaria', 
             label: 'Ciclo: Uso de Herramientas Tecnológicas e Inteligencia Artificial Aplicadas en el Área de Química', 
-            description: '• Uso de herramientas tecnológicas para la presentación de contenidos interactivos para el área de química.\n• Manejo de la tecnología e inteligencia artificial para el empoderamiento y la participación TEP, enfocada al área de química.\n• Uso de herramientas tecnológicas para la evaluación interactiva en el área de química.',
+            description: '• Uso de herramientas tecnológicas para la presentación de contenidos interactivos para el área de química.\n• Manejo de la tecnología e inteligencia artificial para el empoderamiento y la participación TEP, enfocada al área de química.\n• Uso de herramientas tecnológicas para la evaluación interactiva en el área de química.', 
             icon: '🤖' 
         },
         { 
             value: 'ciclo_ia_biologia_secundaria', 
             label: 'Ciclo: Uso de Herramientas Tecnológicas e Inteligencia Artificial Aplicadas en el Área de Biología', 
-            description: '• Uso de herramientas tecnológicas para la presentación de contenidos interactivos para el área de biología.\n• Manejo de la tecnología e inteligencia artificial para el empoderamiento y la participación TEP, enfocada al área de biología.\n• Uso de herramientas tecnológicas para la evaluación interactiva en el área de biología.',
+            description: '• Uso de herramientas tecnológicas para la presentación de contenidos interactivos para el área de biología.\n• Manejo de la tecnología e inteligencia artificial para el empoderamiento y la participación TEP, enfocada al área de biología.\n• Uso de herramientas tecnológicas para la evaluación interactiva en el área de biología.', 
             icon: '🤖' 
         },
         { 
             value: 'ciclo_ia_artes_plasticas_secundaria', 
             label: 'Ciclo: Uso de Herramientas Tecnológicas e Inteligencia Artificial Aplicadas en el Área de Artes Plásticas y Visuales', 
-            description: '• Uso de herramientas tecnológicas para la presentación de contenidos interactivos para el área de artes plásticas y visuales.\n• Manejo de la tecnología e inteligencia artificial para el empoderamiento y la participación TEP, enfocada al área de artes plásticas y visuales.\n• Uso de herramientas tecnológicas para la evaluación interactiva en el área de artes plásticas y visuales.',
+            description: '• Uso de herramientas tecnológicas para la presentación de contenidos interactivos para el área de artes plásticas y visuales.\n• Manejo de la tecnología e inteligencia artificial para el empoderamiento y la participación TEP, enfocada al área de artes plásticas y visuales.\n• Uso de herramientas tecnológicas para la evaluación interactiva en el área de artes plásticas y visuales.', 
             icon: '🤖' 
         },
         { 
             value: 'ciclo_ia_educacion_fisica_secundaria', 
             label: 'Ciclo: Uso de Herramientas Tecnológicas e Inteligencia Artificial Aplicadas en el Área de Educación Física y Deportes', 
-            description: '• Uso de herramientas tecnológicas para la presentación de contenidos interactivos para el área de educación física y deportes.\n• Manejo de la tecnología e inteligencia artificial para el empoderamiento y la participación TEP, enfocada al área de educación física y deportes.\n• Uso de herramientas tecnológicas para la evaluación interactiva en el área de educación física y deportes.',
+            description: '• Uso de herramientas tecnológicas para la presentación de contenidos interactivos para el área de educación física y deportes.\n• Manejo de la tecnología e inteligencia artificial para el empoderamiento y la participación TEP, enfocada al área de educación física y deportes.\n• Uso de herramientas tecnológicas para la evaluación interactiva en el área de educación física y deportes.', 
             icon: '🤖' 
         },
         { 
             value: 'ciclo_ia_valores_espiritualidad_secundaria', 
             label: 'Ciclo: Uso de Herramientas Tecnológicas e Inteligencia Artificial Aplicadas en el Área de Valores, Espiritualidad y Religiones', 
-            description: '• Uso de herramientas tecnológicas para la presentación de contenidos interactivos para el área de valores, espiritualidad y religiones.\n• Manejo de la tecnología e inteligencia artificial para el empoderamiento y la participación TEP, enfocada al área de valores, espiritualidad y religiones.\n• Uso de herramientas tecnológicas para la evaluación interactiva en el área de valores, espiritualidad y religiones.',
+            description: '• Uso de herramientas tecnológicas para la presentación de contenidos interactivos para el área de valores, espiritualidad y religiones.\n• Manejo de la tecnología e inteligencia artificial para el empoderamiento y la participación TEP, enfocada al área de valores, espiritualidad y religiones.\n• Uso de herramientas tecnológicas para la evaluación interactiva en el área de valores, espiritualidad y religiones.', 
             icon: '🤖' 
         },
         { 
             value: 'ciclo_ia_ingles_secundaria', 
             label: 'Ciclo: Herramientas Tecnológicas e Inteligencia Artificial Aplicadas en el Área de Lengua Extranjera – Inglés', 
-            description: '• Uso y manejo de plataformas interactivas para la enseñanza del idioma inglés.\n• Implementación de podcasts y blogs para el aprendizaje del idioma inglés.\n• Uso de la realidad virtual como herramienta para la evaluación del idioma inglés.',
+            description: '• Uso y manejo de plataformas interactivas para la enseñanza del idioma inglés.\n• Implementación de podcasts y blogs para el aprendizaje del idioma inglés.\n• Uso de la realidad virtual como herramienta para la evaluación del idioma inglés.', 
             icon: '🤖' 
         },
         { 
             value: 'ciclo_laboratorio_quimica_secundaria', 
             label: 'Ciclo: Uso de Laboratorios en el Área de Química', 
-            description: '• Práctica de laboratorios de química para 1ro y 2do año secundaria.\n• Práctica de laboratorios de química para 3ro y 4to año de secundaria.\n• Práctica de laboratorios de química para 5to y 6to año secundaria.\n• Recursos tecnológicos y simuladores virtuales para el laboratorio de química.',
+            description: '• Práctica de laboratorios de química para 1ro y 2do año secundaria.\n• Práctica de laboratorios de química para 3ro y 4to año de secundaria.\n• Práctica de laboratorios de química para 5to y 6to año secundaria.\n• Recursos tecnológicos y simuladores virtuales para el laboratorio de química.', 
             icon: '🧪' 
         },
         { 
             value: 'ciclo_laboratorio_fisica_secundaria', 
             label: 'Ciclo: Uso de Laboratorios en el Área de Física', 
-            description: '• Práctica de laboratorios de física para 1ro y 2do año de secundaria.\n• Práctica de laboratorios de física para 3ro y 4to año de secundaria.\n• Práctica de laboratorios de física para 5to y 6to año de secundaria.\n• Recursos tecnológicos y simuladores virtuales para el laboratorio de física.',
+            description: '• Práctica de laboratorios de física para 1ro y 2do año de secundaria.\n• Práctica de laboratorios de física para 3ro y 4to año de secundaria.\n• Práctica de laboratorios de física para 5to y 6to año de secundaria.\n• Recursos tecnológicos y simuladores virtuales para el laboratorio de física.', 
             icon: '⚗️' 
         },
         { 
             value: 'ciclo_laboratorio_biologia_geografia_secundaria', 
             label: 'Ciclo: Uso de Laboratorios en el Área de Biología - Geografía', 
-            description: '• Práctica de laboratorios de biología - geografía para 1ro y 2do año de secundaria.\n• Práctica de laboratorios de biología - geografía para 3ro y 4to año de secundaria.\n• Práctica de laboratorios de biología - geografía para 5to y 6to año de secundaria.\n• Recursos tecnológicos y simuladores virtuales para el laboratorio de biología y geografía.',
+            description: '• Práctica de laboratorios de biología - geografía para 1ro y 2do año de secundaria.\n• Práctica de laboratorios de biología - geografía para 3ro y 4to año de secundaria.\n• Práctica de laboratorios de biología - geografía para 5to y 6to año de secundaria.\n• Recursos tecnológicos y simuladores virtuales para el laboratorio de biología y geografía.', 
             icon: '🔬' 
         },
         { 
             value: 'ciclo_programacion_robotica_secundaria', 
             label: 'Ciclo: Programación y Robótica Aplicada para Secundaria', 
-            description: '• Electrónica y ensamblaje de robots.\n• Programación avanzada integrada a la robótica.\n• Proyectos robóticos integrados con enfoque productivo.',
+            description: '• Electrónica y ensamblaje de robots.\n• Programación avanzada integrada a la robótica.\n• Proyectos robóticos integrados con enfoque productivo.', 
             icon: '🤖' 
         },
         { 
             value: 'ciclo_laboratorio_matematico_secundaria', 
             label: 'Ciclo: Laboratorio Matemático en Educación Secundaria', 
-            description: '• Materiales y recursos de laboratorios: manipulativos y tecnológicos.\n• Álgebra y cálculo en el laboratorio.\n• Estadística y probabilidad para proyectos de investigación.',
+            description: '• Materiales y recursos de laboratorios: manipulativos y tecnológicos.\n• Álgebra y cálculo en el laboratorio.\n• Estadística y probabilidad para proyectos de investigación.', 
             icon: '🔬' 
         },
         { 
             value: 'ciclo_pensamiento_logico_matematico_secundaria', 
             label: 'Ciclo: Potenciando el Pensamiento Lógico-Matemático en Educación Secundaria', 
-            description: '• Estrategias para fomentar el pensamiento lógico en el aula.\n• Estrategias para potenciar el razonamiento algebraico.\n• Resolución de problemas complejos para estimular el pensamiento crítico.',
+            description: '• Estrategias para fomentar el pensamiento lógico en el aula.\n• Estrategias para potenciar el razonamiento algebraico.\n• Resolución de problemas complejos para estimular el pensamiento crítico.', 
             icon: '🧮' 
         },
         { 
             value: 'ciclo_educacion_financiera_secundaria', 
             label: 'Ciclo: Educación Financiera para Nivel Secundario', 
-            description: '• Introducción a la economía y finanzas personales.\n• El crédito, la deuda y el consumo responsable.\n• Emprendimiento y gestión del dinero en el futuro.',
+            description: '• Introducción a la economía y finanzas personales.\n• El crédito, la deuda y el consumo responsable.\n• Emprendimiento y gestión del dinero en el futuro.', 
             icon: '💰' 
         },
         { 
             value: 'ciclo_olimpiadas_cientificas_secundaria', 
             label: 'Ciclo: Estrategias para la Competición en Olimpiadas Científicas y Otras Competencias', 
-            description: '• Fundamentos y estrategias generales para competencias científicas.\n• Abordaje específico de áreas científicas y técnicas.\n• Preparación intensiva y evaluación competitiva.',
+            description: '• Fundamentos y estrategias generales para competencias científicas.\n• Abordaje específico de áreas científicas y técnicas.\n• Preparación intensiva y evaluación competitiva.', 
             icon: '🏆' 
         },
         { 
             value: 'ciclo_pensamiento_critico_secundaria', 
             label: 'Ciclo: Fortaleciendo el Pensamiento Crítico en Educación Secundaria', 
-            description: '• Lógica y argumentación para el pensamiento crítico.\n• Metodologías activas de aprendizaje.\n• Herramientas y técnicas para evaluar el pensamiento crítico.',
+            description: '• Lógica y argumentación para el pensamiento crítico.\n• Metodologías activas de aprendizaje.\n• Herramientas y técnicas para evaluar el pensamiento crítico.', 
             icon: '🧠' 
         },
         { 
             value: 'ciclo_comprension_lectora_escritura_secundaria', 
             label: 'Ciclo: Fortaleciendo la Comprensión Lectora y la Producción Escrita en Educación Secundaria', 
-            description: '• Estrategias para desarrollar la comprensión lectora en el aula.\n• Técnicas para la redacción y argumentación escrita.\n• Promoviendo la lectura crítica y escritura creativa.',
+            description: '• Estrategias para desarrollar la comprensión lectora en el aula.\n• Técnicas para la redacción y argumentación escrita.\n• Promoviendo la lectura crítica y escritura creativa.', 
             icon: '📖' 
         },
         { 
             value: 'ciclo_bachillerato_tecnico_humanistico', 
             label: 'Ciclo: Bachillerato Técnico Humanístico - Contenidos Comunes', 
-            description: '• Marco normativo para el abordaje del BTH.\n• Educación tecnológica para una sociedad innovadora y sostenible.\n• Enfoque integral para la seguridad y sostenibilidad.',
+            description: '• Marco normativo para el abordaje del BTH.\n• Educación tecnológica para una sociedad innovadora y sostenible.\n• Enfoque integral para la seguridad y sostenibilidad.', 
             icon: '📚' 
         },
         { 
             value: 'ciclo_emprendimiento_productivo_secundaria', 
             label: 'Ciclo: Emprendimientos Productivos Individuales', 
-            description: '• Ideas y plan de negocios para emprendimientos productivos.\n• Marketing digital para emprendimientos productivos.\n• Plan de acción y evaluación de proyectos de emprendimientos productivos.',
+            description: '• Ideas y plan de negocios para emprendimientos productivos.\n• Marketing digital para emprendimientos productivos.\n• Plan de acción y evaluación de proyectos de emprendimientos productivos.', 
             icon: '💼' 
         }
     ],
@@ -622,32 +703,58 @@ const SPECIFIC_CYCLES: Record<string, Option[]> = {
 };
 
 // Helpers para generar opciones
-const getConferenceOptions = (): Option[] => COMMON_CONFERENCES;
+const getConferenceOptions = (): Option[] => {
+    return COMMON_CONFERENCES.map(opt => ({
+        ...opt,
+        bgColor: CONFERENCE_COLOR
+    }));
+};
 
 const getWorkshopOptions = (data: UserData): Option[] => {
     const rawSub = data.subsistema;
     const sub = (Array.isArray(rawSub) ? rawSub[0] : rawSub) || 'regular';
-    return SPECIFIC_WORKSHOPS[sub] || [];
+    const options = SPECIFIC_WORKSHOPS[sub] || [];
+    
+    // Use the specific WORKSHOP_COLOR requested
+    return options.map(opt => ({
+        ...opt,
+        bgColor: WORKSHOP_COLOR
+    }));
 };
 
 const getCourseOptions = (data: UserData): Option[] => {
     const rawSub = data.subsistema;
     const sub = (Array.isArray(rawSub) ? rawSub[0] : rawSub) || 'regular';
     
-    // Categorize specific courses
+    // Categorize specific courses with specific background color
     const specificList = (SPECIFIC_CYCLES[sub] || []).map(opt => ({
         ...opt,
-        category: `🎯 CICLOS FORMATIVOS PARA EDUCACIÓN (${sub.toUpperCase()})`
+        category: `🎯 CICLOS FORMATIVOS PARA EDUCACIÓN (${sub.toUpperCase()})`,
+        bgColor: SUBSYSTEM_COLORS[sub] || '#FFFFFF'
     }));
 
-    // Categorize common courses
+    // Categorize common courses with common background color
     const commonList = COMMON_CYCLES.map(opt => ({
         ...opt,
-        category: '🌍 OFERTA GENERAL (PARA TODOS LOS ACTORES DEL SEP)'
+        category: '🌍 OFERTA GENERAL (PARA TODOS LOS ACTORES DEL SEP)',
+        bgColor: COMMON_CYCLE_COLOR
     }));
 
     // Return specific first (more relevant) then general
     return [...specificList, ...commonList];
+};
+
+const getDistrictOptions = (data: UserData): Option[] => {
+    const rawDept = data.departamento;
+    // Ensure we have a string
+    const dept = (Array.isArray(rawDept) ? rawDept[0] : rawDept) as string;
+    const districtList = DISTRICTS_DATA[dept] || [];
+    
+    return districtList.map(dist => ({
+        value: dist,
+        label: dist,
+        icon: '📍🗺️'
+    }));
 };
 
 export const FLOW: Step[] = [
@@ -691,10 +798,10 @@ export const FLOW: Step[] = [
     },
     { 
         type: 'bot', 
-        message: '¿Distrito educativo?', 
+        message: 'Seleccione su Distrito Educativo:', 
         delay: 1000, 
+        options: getDistrictOptions,
         input: 'distrito', 
-        validation: 'text', 
         questionLabel: 'Distrito educativo' 
     },
     { 
@@ -714,30 +821,29 @@ export const FLOW: Step[] = [
         delay: 1000, 
         options: [
             { value: 'fiscal', label: 'Fiscal', icon: '🏫' }, 
-            { value: 'convenio', label: 'Convenio', icon: '🤝' },
-            { value: 'particular', label: 'Particular', icon: '🏢' }
+            { value: 'convenio', label: 'Convenio', icon: '🤝' }           
         ], 
         input: 'tipo_ue', 
         questionLabel: 'Tipo de unidad educativa' 
     },
     { 
         type: 'bot', 
-        message: '¿Cuál de las siguientes modalidades de educación pertenece?', 
+        message: '1. ¿A qué segmento del sistema de educación pertenece?', 
         delay: 1000, 
         options: [
-            { value: 'inicial', label: 'Educación inicial', icon: '👶' }, 
-            { value: 'primaria', label: 'Educación primaria', icon: '🎒' }, 
-            { value: 'secundaria', label: 'Educación secundaria', icon: '👱' },
-            { value: 'especial', label: 'Educación especial', icon: '♿' },
-            { value: 'alternativa', label: 'Educación Alternativa', icon: '📚' },
-            { value: 'superior', label: 'Institutos Técnicos -Tecnológicos', icon: '🎓' }
+            { value: 'inicial', label: 'Inicial', icon: '👶' }, 
+            { value: 'primaria', label: 'Primaria', icon: '🎒' }, 
+            { value: 'secundaria', label: 'Secundaria', icon: '👱' },
+            { value: 'especial', label: 'Especial', icon: '♿' },
+            { value: 'alternativa', label: 'Alternativa', icon: '📚' },
+            { value: 'superior', label: 'Superior', icon: '🎓' }
         ], 
         input: 'subsistema', 
         questionLabel: 'Subsistema' 
     },
     { 
         type: 'bot', 
-        message: '¿Cuál es la función que desempeña actualmente?', 
+        message: '2. ¿Cuál es la función que desempeña actualmente?', 
         delay: 1000, 
         options: [
             { value: 'director', label: 'Director(a)', icon: '👔' }, 
@@ -752,7 +858,7 @@ export const FLOW: Step[] = [
     // --- PREGUNTAS DE EVALUACIÓN ---
     { 
         type: 'bot', 
-        message: '¿Conoce la oferta formativa de UNEFCO 2025?', 
+        message: '3. ¿Conoce la oferta formativa de UNEFCO 2025?', 
         delay: 1000, 
         options: [
             { value: 'si', label: 'SÍ', icon: '✅' }, 
@@ -768,7 +874,7 @@ export const FLOW: Step[] = [
         condition: (data) => data.conoce_oferta === 'si', 
         ifTrue: { 
             type: 'bot', 
-            message: '¿Participó en algún curso formativo?', 
+            message: '4. ¿Participó en algún curso formativo?', 
             delay: 1000, 
             options: [
                 { value: 'si', label: 'SÍ', icon: '👍' }, 
@@ -787,7 +893,7 @@ export const FLOW: Step[] = [
         condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
         ifTrue: { 
             type: 'bot', 
-            message: 'Marque qué CONFERENCIAS fueron de su mayor agrado (fue partícipe). Puede seleccionar varias.', 
+            message: '5. Marque qué CONFERENCIAS fueron de su mayor agrado (fue partícipe). Puede seleccionar varias.', 
             delay: 1000, 
             options: getConferenceOptions, 
             multiselect: true,
@@ -802,7 +908,7 @@ export const FLOW: Step[] = [
         condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
         ifTrue: { 
             type: 'bot', 
-            message: 'Marque qué TALLERES fueron de su mayor agrado (fue partícipe). Puede seleccionar varios.', 
+            message: '6. Marque qué TALLERES fueron de su mayor agrado (fue partícipe). Puede seleccionar varias.', 
             delay: 1000, 
             options: getWorkshopOptions, 
             multiselect: true,
@@ -817,7 +923,7 @@ export const FLOW: Step[] = [
         condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
         ifTrue: { 
             type: 'bot', 
-            message: 'Marque qué CICLOS/CURSOS fueron de su mayor agrado (fue partícipe). Puede seleccionar varios.', 
+            message: '7. Marque qué CICLOS/CURSOS fueron de su mayor agrado (fue partícipe). Puede seleccionar varias.', 
             delay: 1000, 
             options: getCourseOptions, // Full List
             multiselect: true, // Enable selecting multiple
@@ -831,7 +937,7 @@ export const FLOW: Step[] = [
         condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
         ifTrue: { 
             type: 'bot', 
-            message: '¿Los cursos de los cuales fue participe, considera que fueron aplicados en la práctica educativa que desarrollo en la gestión 2025?', 
+            message: '8. ¿Los cursos de los cuales fue participe, considera que fueron aplicados en la práctica educativa que desarrollo en la gestión 2025?', 
             delay: 1000, 
             options: [
                 { value: 'muy_aplicables', label: 'Muy aplicables', icon: '⭐' }, 
@@ -847,7 +953,7 @@ export const FLOW: Step[] = [
         condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
         ifTrue: { 
             type: 'bot', 
-            message: '¿Considera que la metodología aplicada durante la gestión 2025 fue oportuna, clara y concreta?', 
+            message: '9. ¿Considera que la metodología aplicada durante la gestión 2025 fue oportuna, clara y concreta?', 
             delay: 1000, 
             options: [
                 { value: 'buena', label: 'BUENA', icon: '✅' }, 
@@ -864,7 +970,7 @@ export const FLOW: Step[] = [
         condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si' && data.metodologia === 'buena', 
         ifTrue: { 
             type: 'bot', 
-            message: '¿Cómo evalúa la calidad de contenidos?', 
+            message: '10. ¿Cómo evalúa la calidad de contenidos?', 
             delay: 1000, 
             options: [
                 { value: 'excelente', label: 'EXCELENTE', icon: '🥇' }, 
@@ -881,7 +987,7 @@ export const FLOW: Step[] = [
         condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si' && (data.metodologia === 'regular' || data.metodologia === 'insuficiente'), 
         ifTrue: { 
             type: 'bot', 
-            message: 'Por favor indique el motivo principal:', 
+            message: '10. Por favor indique el motivo principal:', 
             delay: 1000, 
             options: [
                 { value: 'contenidos_actualizados', label: 'Contenidos que necesitan ser actualizados', icon: '📄' }, 
@@ -900,7 +1006,7 @@ export const FLOW: Step[] = [
         condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
         ifTrue: { 
             type: 'bot', 
-            message: '4 ¿Qué aspectos deberían mejorar en la calidad de los cursos?', 
+            message: '11. ¿Qué aspectos deberían mejorar en la calidad de los cursos?', 
             delay: 1000, 
             options: [
                 { value: 'contenidos', label: 'CONTENIDOS ACTUALIZADOS', icon: '🔄' }, 
@@ -910,34 +1016,101 @@ export const FLOW: Step[] = [
             ], 
             input: 'aspectos_mejora', 
             questionLabel: 'Aspectos Mejora' 
-        } 
+        }
     },
-
-    // --- SUB-RAMA: NO PARTICIPÓ (Conoce=Si, Participo=No) ---
     { 
         type: 'conditional', 
-        condition: (data) => data.conoce_oferta === 'si' && data.participo === 'no', 
+        condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
         ifTrue: { 
+            
+            type: 'bot',
+            message: '12. Sugiera temáticas para CONFERENCIAS magistrales (Indicar que no hayan sido contemplado en la oferta formativa 2025)',
+            delay: 1000,
+            input: 'sugerencia_conferencias_2026',
+            validation: 'optional',
+            questionLabel: 'Sugerencia Conferencias'
+            
+        }
+    },
+    { 
+        type: 'conditional', 
+        condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
+        ifTrue: { 
+            
+            type: 'bot',
+            message: '13. Sugiera temas específicos para TALLERES (Cortos y prácticos) (Indicar que no hayan sido contemplado en la oferta formativa 2025)',
+            delay: 1000,
+            input: 'sugerencia_talleres_2026',
+            validation: 'optional',
+            questionLabel: 'Sugerencia Talleres'
+            
+        }
+    },
+    { 
+        type: 'conditional', 
+        condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
+        ifTrue: { 
+            
+            type: 'bot',
+            message: '14. Para la Gestión 2026: Sugiera temas para CICLOS y CURSOS (Indicar que no hayan sido contemplado en la oferta formativa 2025)',
+            delay: 1000,
+            input: 'sugerencia_ciclos_2026',
+            validation: 'optional',
+            questionLabel: 'Sugerencia Ciclos'
+            
+        }
+    },
+    { 
+        type: 'conditional', 
+        condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
+        ifTrue: { 
+            
             type: 'bot', 
-            message: '¿Qué factores influyeron para que no pueda ser partícipe de los cursos formativos de UNEFCO la gestión 2025?', 
+            message: '15. ¿Qué modalidad se le hace más efectiva para la ejecución de los cursos?', 
             delay: 1000, 
             options: [
-                { value: 'falta_tiempo', label: 'Falta de tiempo', icon: '⏳' }, 
-                { value: 'no_interes', label: 'Los cursos/ciclos y/o talleres no son de mi interés', icon: '🤔' },
-                { value: 'otros', label: 'Otros', icon: '➕' }
+                { value: 'presencial', label: 'Presencial (Talleres)', icon: '🏢' }, 
+                { value: 'semipresencial', label: 'Semipresencial (Ciclos/Cursos)', icon: '🏫' },
+                { value: 'distancia', label: 'A distancia (Ciclos/Cursos)', icon: '💻' }
             ], 
-            input: 'factor_no_participacion', 
-            questionLabel: 'Factor No Participación' 
-        } 
+            input: 'modalidad_efectiva', 
+            questionLabel: 'Modalidad Efectiva'
+            
+        }
     },
-
+    { 
+        type: 'conditional', 
+        condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
+        ifTrue: { 
+            
+            type: 'bot', 
+            message: '16. COMENTARIOS FINALES: Algún aspecto que no se haya contemplado u omitido en el presente cuestionario.', 
+            delay: 1000, 
+            input: 'comentarios_finales', 
+            validation: 'optional', 
+            questionLabel: 'Comentarios Finales'
+            
+        }
+    },
+    { 
+        type: 'conditional', 
+        condition: (data) => data.conoce_oferta === 'si' && data.participo === 'si', 
+        ifTrue: { 
+            
+            type: 'bot', 
+            message: '¡MUCHAS GRACIAS! SUS RESPUESTAS HAN SIDO GUARDADAS Y SERÁN TOMADAS EN CUENTA PARA LA ELABORACIÓN DE LA OFERTA FORMATIVA 2026', 
+            delay: 1500, 
+            action: 'saveData' 
+                
+        }
+    },  
     // --- SUB-RAMA: NO CONOCE (Conoce=No) ---
     { 
         type: 'conditional', 
         condition: (data) => data.conoce_oferta === 'no', 
         ifTrue: { 
             type: 'bot', 
-            message: 'A continuación le presentamos la oferta formativa con la cual se trabajó este año. (Revise el enlace PDF 👇 si desea ver el detalle de ciclos disponibles).\n\n¿Qué factores influyeron para que no pueda ser partícipe de los cursos formativos de UNEFCO la gestión 2025?', 
+            message: '4. A continuación le presentamos la oferta formativa con la cual se trabajó este año. (Revise el enlace PDF 👇 si desea ver el detalle de ciclos disponibles).\n\n¿Qué factores influyeron para que no pueda ser partícipe de los cursos formativos de UNEFCO la gestión 2025?', 
             delay: 2000, 
             externalLink: 'https://drive.google.com/file/d/1nu3t_VeXoT5HCUZ8YHGB34nBi1ewAuLT/view?usp=sharing',
             options: [
@@ -948,59 +1121,134 @@ export const FLOW: Step[] = [
             input: 'factor_no_participacion', 
             questionLabel: 'Factor No Participación' 
         } 
-    },
-
-    // --- SECCIÓN DE SUGERENCIAS (COMÚN PARA TODOS) ---
-    {
-        type: 'bot',
-        message: 'Sugiera temáticas para CONFERENCIAS magistrales (Indicar que no hayan sido contemplado en la oferta formativa 2025)',
-        delay: 1000,
-        input: 'sugerencia_conferencias_2026',
-        validation: 'optional',
-        questionLabel: 'Sugerencia Conferencias'
-    },
-    {
-        type: 'bot',
-        message: 'Sugiera temas específicos para TALLERES (Cortos y prácticos) (Indicar que no hayan sido contemplado en la oferta formativa 2025)',
-        delay: 1000,
-        input: 'sugerencia_talleres_2026',
-        validation: 'optional',
-        questionLabel: 'Sugerencia Talleres'
+    },  
+    { 
+        type: 'conditional', 
+        condition: (data) => data.conoce_oferta === 'no',  
+        ifTrue: { 
+            
+            type: 'bot', 
+            message: '5. Ahora que conoces la oferta formativa. ¿Podría sugerir algunos contenidos para la elaboración de ciclos/cursos que pueda responder sus necesidades dentro de la práctica educativa.', 
+            delay: 1000, 
+            input: 'sugerencia_contenidos', 
+            validation: 'optional', 
+            questionLabel: 'Sugerencia Contenidos'
+            
+        }
+    },  
+    { 
+        type: 'conditional', 
+        condition: (data) => data.conoce_oferta === 'no',  
+        ifTrue: { 
+            
+            type: 'bot', 
+            message: '6. Ahora que conoces la oferta formativa. ¿Podría sugerirnos algunas temáticas para la elaboración de talleres y/o conferencias que pueda ayudar a responder sus necesidades dentro de la práctica educativa?.', 
+            delay: 1000, 
+            input: 'sugerencia_tematicas', 
+            validation: 'optional', 
+            questionLabel: 'Sugerencia Tematicas'
+            
+        }
     }, 
-    {
-        type: 'bot',
-        message: 'Para la Gestión 2026: Sugiera temas para CICLOS y CURSOS (Indicar que no hayan sido contemplado en la oferta formativa 2025)',
-        delay: 1000,
-        input: 'sugerencia_ciclos_2026',
-        validation: 'optional',
-        questionLabel: 'Sugerencia Ciclos'
-    },       
     { 
-        type: 'bot', 
-        message: '¿Qué modalidad se le hace más efectiva para la ejecución de los cursos?', 
-        delay: 1000, 
-        options: [
-            { value: 'presencial', label: 'Presencial (Talleres)', icon: '🏢' }, 
-            { value: 'semipresencial', label: 'Semipresencial (Ciclos/Cursos)', icon: '🏫' },
-            { value: 'distancia', label: 'A distancia (Ciclos/Cursos)', icon: '💻' }
-        ], 
-        input: 'modalidad_efectiva', 
-        questionLabel: 'Modalidad Efectiva' 
+        type: 'conditional', 
+        condition: (data) => data.conoce_oferta === 'no',  
+        ifTrue: { 
+            
+            type: 'bot', 
+            message: '7. COMENTARIOS FINALES: Algún aspecto que no se haya contemplado u omitido en el presente cuestionario.', 
+            delay: 1000, 
+            input: 'comentarios_finales', 
+            validation: 'optional', 
+            questionLabel: 'Comentarios Finales'
+            
+        }
     },
     { 
-        type: 'bot', 
-        message: 'COMENTARIOS FINALES: Algún aspecto que no se haya contemplado u omitido en el presente cuestionario.', 
-        delay: 1000, 
-        input: 'comentarios_finales', 
-        validation: 'optional', 
-        questionLabel: 'Comentarios Finales' 
-    },
-
-    // --- CIERRE ---
+        type: 'conditional', 
+        condition: (data) => data.conoce_oferta === 'no', 
+        ifTrue: { 
+            
+            type: 'bot', 
+            message: '¡MUCHAS GRACIAS! SUS RESPUESTAS HAN SIDO GUARDADAS Y SERÁN TOMADAS EN CUENTA PARA LA ELABORACIÓN DE LA OFERTA FORMATIVA 2026', 
+            delay: 1500, 
+            action: 'saveData' 
+                
+        }
+    }, 
+    // --- SUB-RAMA: NO CONOCE (Participo=No) ---
     { 
-        type: 'bot', 
-        message: '¡MUCHAS GRACIAS! Sus respuestas han sido guardadas.', 
-        delay: 1500, 
-        action: 'saveData' 
-    }
+        type: 'conditional', 
+        condition: (data) => data.participo === 'no', 
+        ifTrue: { 
+            type: 'bot', 
+            message: '5. A continuación le presentamos la oferta formativa con la cual se trabajó este año. (Revise el enlace PDF 👇 si desea ver el detalle de ciclos disponibles).\n\n¿Qué factores influyeron para que no pueda ser partícipe de los cursos formativos de UNEFCO la gestión 2025?', 
+            delay: 2000, 
+            externalLink: 'https://drive.google.com/file/d/1nu3t_VeXoT5HCUZ8YHGB34nBi1ewAuLT/view?usp=sharing',
+            options: [
+                { value: 'falta_tiempo', label: 'Falta de tiempo', icon: '⏳' }, 
+                { value: 'dificil_acceso', label: 'Me encuentro en una zona de difícil acceso', icon: '🏕️' }, 
+                { value: 'acceso_internet', label: 'Acceso a internet', icon: '📶' },
+                { value: 'dificultad_plataformas', label: 'Dificultad del manejo de plataformas', icon: '💻' },
+                { value: 'otros', label: 'Me siento actualizado en mi formación', icon: '👩‍💻' }
+            ], 
+            input: 'factor_no_participacion', 
+            questionLabel: 'Factor No Participación' 
+        } 
+    },  
+    { 
+        type: 'conditional', 
+        condition: (data) => data.participo === 'no',  
+        ifTrue: { 
+            
+            type: 'bot', 
+            message: '6. Ahora que conoces la oferta formativa. ¿Podría sugerir algunos contenidos para la elaboración de ciclos/cursos que pueda responder sus necesidades dentro de la práctica educativa.', 
+            delay: 1000, 
+            input: 'sugerencia_contenidos', 
+            validation: 'optional', 
+            questionLabel: 'Sugerencia Contenidos'
+            
+        }
+    },  
+    { 
+        type: 'conditional', 
+        condition: (data) => data.participo === 'no',  
+        ifTrue: { 
+            
+            type: 'bot', 
+            message: '7. Ahora que conoces la oferta formativa. ¿Podría sugerirnos algunas temáticas para la elaboración de talleres y/o conferencias que pueda ayudar a responder sus necesidades dentro de la práctica educativa?.', 
+            delay: 1000, 
+            input: 'sugerencia_tematicas', 
+            validation: 'optional', 
+            questionLabel: 'Sugerencia Tematicas'
+            
+        }
+    }, 
+    { 
+        type: 'conditional', 
+        condition: (data) => data.participo === 'no',  
+        ifTrue: { 
+            
+            type: 'bot', 
+            message: '8. COMENTARIOS FINALES: Algún aspecto que no se haya contemplado u omitido en el presente cuestionario.', 
+            delay: 1000, 
+            input: 'comentarios_finales', 
+            validation: 'optional', 
+            questionLabel: 'Comentarios Finales'
+            
+        }
+    },
+    { 
+        type: 'conditional', 
+        condition: (data) => data.participo === 'no', 
+        ifTrue: { 
+            
+            type: 'bot', 
+            message: '¡MUCHAS GRACIAS! SUS RESPUESTAS HAN SIDO GUARDADAS Y SERÁN TOMADAS EN CUENTA PARA LA ELABORACIÓN DE LA OFERTA FORMATIVA 2026', 
+            delay: 1500, 
+            action: 'saveData' 
+                
+        }
+    },     
+    
 ];
